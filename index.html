@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="zh-SG">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>2027年华文组教学与工作意向调查</title>
+
+  <!-- Drag-and-drop library (works on desktop and mobile) -->
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js"></script>
+
+  <style>
+    :root{
+      --bg:#f5f7fb;
+      --card:#ffffff;
+      --text:#1f2937;
+      --muted:#6b7280;
+      --line:#e5e7eb;
+      --accent:#7c2d12;
+      --accent2:#b45309;
+      --soft:#fff7ed;
+      --success:#166534;
+      --danger:#b91c1c;
+      --shadow:0 12px 30px rgba(15,23,42,.08);
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", Arial, sans-serif;
+      background:linear-gradient(180deg,#fff7ed 0,#f8fafc 260px,var(--bg) 100%);
+      color:var(--text);
+    }
+
+    .wrap{
+      width:min(920px,calc(100% - 28px));
+      margin:28px auto 60px;
+    }
+
+    .hero{
+      background:linear-gradient(135deg,#7c2d12,#b45309);
+      color:#fff;
+      border-radius:24px;
+      padding:28px 28px 24px;
+      box-shadow:var(--shadow);
+      margin-bottom:18px;
+    }
+
+    .hero h1{
+      margin:0 0 8px;
+      font-size:clamp(25px,4vw,38px);
+      line-height:1.18;
+      letter-spacing:.3px;
+    }
+
+    .hero p{
+      margin:8px 0 0;
+      line-height:1.7;
+      opacity:.95;
+      font-size:15px;
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:7px 11px;
+      border-radius:999px;
+      background:rgba(255,255,255,.15);
+      font-size:13px;
+      margin-bottom:14px;
+    }
+
+    .card{
+      background:var(--card);
+      border:1px solid rgba(229,231,235,.9);
+      border-radius:20px;
+      padding:22px;
+      box-shadow:0 8px 22px rgba(15,23,42,.05);
+      margin:14px 0;
+    }
+
+    .section-title{
+      display:flex;
+      align-items:center;
+      gap:11px;
+      margin:0 0 16px;
+      font-size:20px;
+    }
+
+    .num{
+      width:34px;height:34px;
+      border-radius:10px;
+      display:grid;place-items:center;
+      background:var(--soft);
+      color:var(--accent);
+      font-weight:800;
+      flex:0 0 auto;
+    }
+
+    .label{
+      display:block;
+      font-weight:700;
+      margin:0 0 8px;
+    }
+
+    .help{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.55;
+      margin-top:5px;
+    }
+
+    .required{color:var(--danger)}
+
+    input[type="text"], textarea{
+      width:100%;
+      padding:13px 14px;
+      border:1px solid #d1d5db;
+      border-radius:12px;
+      font:inherit;
+      outline:none;
+      transition:.2s;
+      background:#fff;
+    }
+
+    textarea{min-height:110px;resize:vertical}
+
+    input[type="text"]:focus,textarea:focus{
+      border-color:#b45309;
+      box-shadow:0 0 0 3px rgba(180,83,9,.12);
+    }
+
+    .options{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:10px;
+    }
+
+    .option{
+      border:1px solid var(--line);
+      border-radius:13px;
+      padding:12px 13px;
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      cursor:pointer;
+      background:#fff;
+    }
+
+    .option:hover{border-color:#fdba74;background:#fffaf5}
+    .option input{margin-top:3px;transform:scale(1.1)}
+
+    .sort-list{
+      list-style:none;
+      padding:0;margin:12px 0 0;
+      display:grid;
+      gap:9px;
+    }
+
+    .sort-item{
+      display:grid;
+      grid-template-columns:42px 1fr 32px;
+      gap:10px;
+      align-items:center;
+      border:1px solid var(--line);
+      background:#fff;
+      border-radius:13px;
+      padding:10px 12px;
+      cursor:grab;
+      user-select:none;
+      touch-action:none;
+    }
+
+    .sort-item:active{cursor:grabbing}
+    .rank{
+      width:34px;height:34px;
+      display:grid;place-items:center;
+      border-radius:10px;
+      background:var(--soft);
+      color:var(--accent);
+      font-weight:800;
+    }
+
+    .drag{
+      color:#9ca3af;
+      font-size:20px;
+      text-align:center;
+      line-height:1;
+    }
+
+    .ghost{
+      opacity:.38;
+      background:#ffedd5;
+    }
+
+    .actions{
+      display:flex;
+      gap:10px;
+      justify-content:flex-end;
+      flex-wrap:wrap;
+      margin-top:18px;
+    }
+
+    button{
+      appearance:none;
+      border:0;
+      border-radius:12px;
+      padding:12px 18px;
+      font:inherit;
+      font-weight:750;
+      cursor:pointer;
+    }
+
+    .btn-primary{background:var(--accent);color:white}
+    .btn-secondary{background:#eef2f7;color:#334155}
+    .btn-primary:hover{filter:brightness(1.05)}
+    button:disabled{opacity:.55;cursor:not-allowed}
+
+    .note{
+      border-left:4px solid #fb923c;
+      background:#fff7ed;
+      padding:12px 14px;
+      border-radius:10px;
+      color:#7c2d12;
+      font-size:14px;
+      line-height:1.55;
+    }
+
+    .error{
+      display:none;
+      margin:12px 0 0;
+      padding:11px 13px;
+      border-radius:10px;
+      background:#fef2f2;
+      color:#991b1b;
+      font-size:14px;
+    }
+
+    .success{
+      display:none;
+      text-align:center;
+      padding:42px 24px;
+    }
+    .success .tick{
+      width:68px;height:68px;
+      border-radius:50%;
+      background:#dcfce7;color:var(--success);
+      display:grid;place-items:center;
+      font-size:34px;font-weight:900;
+      margin:0 auto 14px;
+    }
+    .success h2{margin:0 0 8px}
+    .success p{color:var(--muted);line-height:1.6}
+
+    dialog{
+      width:min(700px,calc(100% - 28px));
+      border:0;
+      border-radius:18px;
+      padding:0;
+      box-shadow:0 24px 70px rgba(15,23,42,.28);
+    }
+
+    dialog::backdrop{background:rgba(15,23,42,.52)}
+    .modal-head{
+      padding:20px 22px 12px;
+      border-bottom:1px solid var(--line);
+    }
+    .modal-body{padding:18px 22px;max-height:66vh;overflow:auto}
+    .modal-actions{
+      padding:14px 22px 20px;
+      display:flex;gap:10px;justify-content:flex-end;
+      border-top:1px solid var(--line);
+    }
+
+    .summary-row{
+      padding:11px 0;
+      border-bottom:1px dashed var(--line);
+      line-height:1.55;
+    }
+    .summary-row:last-child{border-bottom:0}
+    .summary-row strong{display:block;margin-bottom:3px}
+
+    .footer{
+      color:#94a3b8;
+      text-align:center;
+      font-size:12px;
+      margin-top:18px;
+    }
+
+    @media(max-width:650px){
+      .wrap{width:min(100% - 18px,920px);margin-top:12px}
+      .hero{border-radius:18px;padding:22px 18px}
+      .card{border-radius:16px;padding:17px}
+      .options{grid-template-columns:1fr}
+      .actions{justify-content:stretch}
+      .actions button{flex:1}
+      .sort-item{grid-template-columns:38px 1fr 28px}
+    }
+  </style>
+</head>
+
+<body>
+  <main class="wrap">
+    <section id="formArea">
+      <div class="hero">
+        <div class="badge">2027 CL Unit Planning</div>
+        <h1>2027年华文组教学与工作意向调查</h1>
+        <p>
+          本问卷旨在了解老师对2027年教学安排、活动筹划及评估工作的意向，
+          作为部门规划与工作分配的参考。实际安排仍需根据学校整体人力、时间表及部门需要作出调整。
+        </p>
+      </div>
+
+      <div class="card">
+        <h2 class="section-title"><span class="num">1</span>基本资料</h2>
+        <label class="label" for="initials">名字缩写 <span class="required">*</span></label>
+        <input id="initials" type="text" maxlength="12" placeholder="例如：ABC" autocomplete="off" />
+        <div class="help">只需填写名字缩写，无需填写完整姓名或电邮。</div>
+      </div>
+
+      <div class="card">
+        <h2 class="section-title"><span class="num">2</span>2027年教学意向</h2>
+        <div class="label">您有意愿教授哪些课程？ <span class="required">*</span></div>
+        <div class="options" id="courseOptions">
+          <label class="option"><input type="checkbox" value="CL">华文（CL）</label>
+          <label class="option"><input type="checkbox" value="HCL">高级华文（HCL）</label>
+          <label class="option"><input type="checkbox" value="FCL">基础华文（FCL）</label>
+          <label class="option"><input type="checkbox" value="MTSP">母语辅助课程（MTSP）</label>
+        </div>
+
+        <div style="height:18px"></div>
+
+        <div class="label">您较倾向以下哪个年级组合？ <span class="required">*</span></div>
+        <div class="options" id="gradeOptions">
+          <label class="option"><input type="radio" name="gradeCombo" value="低年级 + 中年级">低年级 + 中年级</label>
+          <label class="option"><input type="radio" name="gradeCombo" value="低年级 + 高年级">低年级 + 高年级</label>
+          <label class="option"><input type="radio" name="gradeCombo" value="中年级 + 高年级">中年级 + 高年级</label>
+          <label class="option"><input type="radio" name="gradeCombo" value="中年级 + 中年级（如 P3 + P4）">中年级 + 中年级（如 P3 + P4）</label>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 class="section-title"><span class="num">3</span>母语部活动筹划意向</h2>
+        <div class="note">请拖曳项目进行排序。<strong>1 = 最有兴趣负责筹划</strong>。</div>
+        <ul id="activityList" class="sort-list">
+          <li class="sort-item" data-key="CNY"><span class="rank"></span><span>华人农历新年庆祝活动</span><span class="drag">☰</span></li>
+          <li class="sort-item" data-key="MTFW"><span class="rank"></span><span>母语双周</span><span class="drag">☰</span></li>
+          <li class="sort-item" data-key="RHD"><span class="rank"></span><span>种族和谐日</span><span class="drag">☰</span></li>
+          <li class="sort-item" data-key="CULTURE_DOOR"><span class="rank"></span><span>文化随意门</span><span class="drag">☰</span></li>
+          <li class="sort-item" data-key="HONGWEN"><span class="rank"></span><span>宏文文化之旅</span><span class="drag">☰</span></li>
+          <li class="sort-item" data-key="CCM"><span class="rank"></span><span>华语和马来语会话课程（CCM）</span><span class="drag">☰</span></li>
+          <li class="sort-item" data-key="MAF"><span class="rank"></span><span>中秋（小型）庆祝会</span><span class="drag">☰</span></li>
+          <li class="sort-item" data-key="READING"><span class="rank"></span><span>阅读·悦读（仕燕和小星负责）</span><span class="drag">☰</span></li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2 class="section-title"><span class="num">4</span>试卷与评估工作意向</h2>
+        <div class="note">请拖曳项目进行排序。<strong>1 = 最有兴趣</strong>。</div>
+        <ul id="assessmentList" class="sort-list">
+          <li class="sort-item" data-key="P1"><span class="rank"></span><span>试卷一（负责协调图意，并生成所需图画）</span><span class="drag">☰</span></li>
+          <li class="sort-item" data-key="P2"><span class="rank"></span><span>试卷二</span><span class="drag">☰</span></li>
+          <li class="sort-item" data-key="MIDDLE_ORAL"><span class="rank"></span><span>中年级口试（负责协调图意，并生成所需图画）</span><span class="drag">☰</span></li>
+          <li class="sort-item" data-key="VETTING"><span class="rank"></span><span>审题</span><span class="drag">☰</span></li>
+          <li class="sort-item" data-key="DATA_ANALYSIS"><span class="rank"></span><span>整理和分析数据</span><span class="drag">☰</span></li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2 class="section-title"><span class="num">5</span>其他意向</h2>
+        <label class="label" for="other">如有其他想法或意向，欢迎提出（选填）</label>
+        <textarea id="other" placeholder="例如：有兴趣支援数码化、SLS、AI资源开发、文化活动设计等。"></textarea>
+
+        <div id="errorBox" class="error"></div>
+
+        <div class="actions">
+          <button class="btn-secondary" type="button" onclick="resetForm()">清除重填</button>
+          <button class="btn-primary" type="button" onclick="openReview()">检查并提交</button>
+        </div>
+      </div>
+
+      <div class="footer">2027 华文组教学与工作规划 · Internal Use</div>
+    </section>
+
+    <section id="successArea" class="card success">
+      <div class="tick">✓</div>
+      <h2>谢谢您的反馈！</h2>
+      <p>
+        您的意向已提交，并将作为2027年华文组教学与工作规划的参考。<br>
+        最终安排将综合考虑学校整体部署、人力、时间表及部门需要。
+      </p>
+    </section>
+  </main>
+
+  <dialog id="reviewDialog">
+    <div class="modal-head">
+      <h2 style="margin:0">提交前请确认</h2>
+      <div class="help">确认无误后按“确认提交”。</div>
+    </div>
+    <div id="summary" class="modal-body"></div>
+    <div class="modal-actions">
+      <button class="btn-secondary" type="button" onclick="document.getElementById('reviewDialog').close()">返回修改</button>
+      <button id="submitBtn" class="btn-primary" type="button" onclick="submitForm()">确认提交</button>
+    </div>
+  </dialog>
+
+  <script>
+    // ============================================================
+    // IMPORTANT:
+    // Replace the URL below with your Google Apps Script Web App URL
+    // ============================================================
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwVXvBahl8i8MtlqHgRPL_aZ3wYMurYfhLkOFUv-ywpb7oacCkFFxYjJ8__iZe6nuCaaA/exec";
+
+    const activityLabels = {
+      CNY: "华人农历新年庆祝活动",
+      MTFW: "母语双周",
+      RHD: "种族和谐日",
+      CULTURE_DOOR: "文化随意门",
+      HONGWEN: "宏文文化之旅",
+      CCM: "华语和马来语会话课程（CCM）",
+      MAF: "中秋（小型）庆祝会",
+      READING: "阅读·悦读（仕燕和小星负责）"
+    };
+
+    const assessmentLabels = {
+      P1: "试卷一（负责协调图意，并生成所需图画）",
+      P2: "试卷二",
+      MIDDLE_ORAL: "中年级口试（负责协调图意，并生成所需图画）",
+      VETTING: "审题",
+      DATA_ANALYSIS: "整理和分析数据"
+    };
+
+    function refreshRanks(listId){
+      document.querySelectorAll(`#${listId} .sort-item`).forEach((el, idx)=>{
+        el.querySelector(".rank").textContent = idx + 1;
+      });
+    }
+
+    new Sortable(document.getElementById("activityList"),{
+      animation:180,
+      ghostClass:"ghost",
+      handle:".sort-item",
+      onEnd:()=>refreshRanks("activityList")
+    });
+
+    new Sortable(document.getElementById("assessmentList"),{
+      animation:180,
+      ghostClass:"ghost",
+      handle:".sort-item",
+      onEnd:()=>refreshRanks("assessmentList")
+    });
+
+    refreshRanks("activityList");
+    refreshRanks("assessmentList");
+
+    function getOrder(listId){
+      return [...document.querySelectorAll(`#${listId} .sort-item`)].map(x=>x.dataset.key);
+    }
+
+    function collectData(){
+      const initials = document.getElementById("initials").value.trim().toUpperCase();
+      const courses = [...document.querySelectorAll("#courseOptions input:checked")].map(x=>x.value);
+      const grade = document.querySelector('input[name="gradeCombo"]:checked')?.value || "";
+      const activities = getOrder("activityList");
+      const assessments = getOrder("assessmentList");
+      const other = document.getElementById("other").value.trim();
+
+      return {
+        initials,
+        courses,
+        gradeCombo: grade,
+        activities,
+        assessments,
+        other,
+        appVersion: "1.0"
+      };
+    }
+
+    function validate(data){
+      if(!data.initials) return "请填写名字缩写。";
+      if(!/^[A-Z0-9\-_. ]{1,12}$/.test(data.initials)){
+        return "名字缩写请使用英文字母、数字、空格、连字符或句点。";
+      }
+      if(data.courses.length === 0) return "请至少选择一项有意愿教授的课程。";
+      if(!data.gradeCombo) return "请选择一个较倾向的年级组合。";
+      return "";
+    }
+
+    function showError(msg){
+      const box = document.getElementById("errorBox");
+      box.textContent = msg;
+      box.style.display = msg ? "block" : "none";
+      if(msg) box.scrollIntoView({behavior:"smooth",block:"center"});
+    }
+
+    function escapeHtml(s){
+      return String(s)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    function openReview(){
+      const data = collectData();
+      const err = validate(data);
+      if(err){ showError(err); return; }
+      showError("");
+
+      const activityText = data.activities
+        .map((k,i)=>`${i+1}. ${activityLabels[k]}`).join("<br>");
+      const assessmentText = data.assessments
+        .map((k,i)=>`${i+1}. ${assessmentLabels[k]}`).join("<br>");
+
+      document.getElementById("summary").innerHTML = `
+        <div class="summary-row"><strong>名字缩写</strong>${escapeHtml(data.initials)}</div>
+        <div class="summary-row"><strong>有意愿教授的课程</strong>${escapeHtml(data.courses.join("、"))}</div>
+        <div class="summary-row"><strong>年级组合</strong>${escapeHtml(data.gradeCombo)}</div>
+        <div class="summary-row"><strong>母语部活动排序</strong>${activityText}</div>
+        <div class="summary-row"><strong>试卷与评估工作排序</strong>${assessmentText}</div>
+        <div class="summary-row"><strong>其他意向</strong>${data.other ? escapeHtml(data.other) : "—"}</div>
+      `;
+      document.getElementById("reviewDialog").showModal();
+    }
+
+    async function submitForm(){
+      const data = collectData();
+      const err = validate(data);
+      if(err){
+        document.getElementById("reviewDialog").close();
+        showError(err);
+        return;
+      }
+
+      if(!SCRIPT_URL || SCRIPT_URL.includes("PASTE_YOUR")){
+        alert("尚未设置 Google Apps Script Web App URL。请先在 index.html 顶部 SCRIPT_URL 位置贴上您的 Web App URL。");
+        return;
+      }
+
+      const btn = document.getElementById("submitBtn");
+      btn.disabled = true;
+      btn.textContent = "提交中…";
+
+      try{
+        // Apps Script Web Apps may not return CORS headers to GitHub Pages.
+        // no-cors allows submission to proceed reliably; the sheet remains the source of record.
+        await fetch(SCRIPT_URL,{
+          method:"POST",
+          mode:"no-cors",
+          headers:{"Content-Type":"text/plain;charset=utf-8"},
+          body:JSON.stringify(data)
+        });
+
+        document.getElementById("reviewDialog").close();
+        document.getElementById("formArea").style.display = "none";
+        const success = document.getElementById("successArea");
+        success.style.display = "block";
+        window.scrollTo({top:0,behavior:"smooth"});
+      }catch(e){
+        alert("提交未完成。请检查网络连接后再试。");
+        console.error(e);
+      }finally{
+        btn.disabled = false;
+        btn.textContent = "确认提交";
+      }
+    }
+
+    function resetForm(){
+      if(!confirm("确定要清除目前填写的内容并重新开始吗？")) return;
+
+      document.getElementById("initials").value = "";
+      document.querySelectorAll("#courseOptions input").forEach(x=>x.checked=false);
+      document.querySelectorAll('input[name="gradeCombo"]').forEach(x=>x.checked=false);
+      document.getElementById("other").value = "";
+      showError("");
+      window.scrollTo({top:0,behavior:"smooth"});
+    }
+  </script>
+</body>
+</html>

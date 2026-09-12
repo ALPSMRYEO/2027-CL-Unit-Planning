@@ -113,7 +113,7 @@
 
     .required{color:var(--danger)}
 
-    input[type="text"], textarea{
+    input[type="text"], select, textarea{
       width:100%;
       padding:13px 14px;
       border:1px solid #d1d5db;
@@ -126,7 +126,7 @@
 
     textarea{min-height:110px;resize:vertical}
 
-    input[type="text"]:focus,textarea:focus{
+    input[type="text"]:focus,select:focus,textarea:focus{
       border-color:#b45309;
       box-shadow:0 0 0 3px rgba(180,83,9,.12);
     }
@@ -315,8 +315,26 @@
       <div class="card">
         <h2 class="section-title"><span class="num">1</span>基本资料</h2>
         <label class="label" for="initials">名字缩写 <span class="required">*</span></label>
-        <input id="initials" type="text" maxlength="12" placeholder="例如：ABC" autocomplete="off" />
-        <div class="help">只需填写名字缩写，无需填写完整姓名或电邮。</div>
+        <select id="initials" required>
+          <option value="">请选择您的名字缩写</option>
+          <option value="CAT">CAT</option>
+          <option value="CJJ">CJJ</option>
+          <option value="CSY">CSY</option>
+          <option value="DJJ">DJJ</option>
+          <option value="FSY">FSY</option>
+          <option value="HXX">HXX</option>
+          <option value="HYL">HYL</option>
+          <option value="HYT">HYT</option>
+          <option value="LLC">LLC</option>
+          <option value="LYS">LYS</option>
+          <option value="PYP">PYP</option>
+          <option value="PYZ">PYZ</option>
+          <option value="SWJ">SWJ</option>
+          <option value="THJ">THJ</option>
+          <option value="YWK">YWK</option>
+          <option value="ZLD">ZLD</option>
+        </select>
+        <div class="help">请选择您的名字缩写，无需填写完整姓名或电邮。</div>
       </div>
 
       <div class="card">
@@ -570,7 +588,7 @@
     function resetForm(){
       if(!confirm("确定要清除目前填写的内容并重新开始吗？")) return;
 
-      document.getElementById("initials").value = "";
+      document.getElementById("initials").selectedIndex = 0;
       document.querySelectorAll("#courseOptions input").forEach(x=>x.checked=false);
       document.querySelectorAll('input[name="gradeCombo"]').forEach(x=>x.checked=false);
       document.getElementById("other").value = "";
